@@ -8,35 +8,476 @@
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/mystyle.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/css/monokai-sublime.css">
+		<!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
 
 		<!-- Printing and PDF exports -->
 		<script>
 			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
+			link.rel  = 'stylesheet';
 			link.type = 'text/css';
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
 	</head>
+
+	<!-- Resources! -->
+	<!-- https://getfirebug.com/firebug-lite-debug.js -->
+
+
+
 	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
 
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+		<div class="reveal">
+			<div class="slides">
+
+				<section data-markdown>
+					<textarea data-template>
+						# D3.js: Data-Driven Documents
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						## When?
+
+						When you need highly *custom* visualizations.
+
+						Look elsewhere if a bar chart is enough.
+					</textarea>
+
+					<aside class="notes">
+						But we will need to begin from very simple examples.
+					</aside>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						D3 is structured into independent modules:
+
+						* d3-selection
+						* d3-transition
+						* d3-scale
+						* d3-hierarchy
+						* d3-color
+						* d3-array
+						* ...
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						So D3 is not a framework.
+
+						It doesn't dictate the structure or the visual design of your application.
+					</textarea>
+					<aside class="notes">
+						Having said that, it does coerce you to adopt a set of idioms.
+					</aside>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						## Do I need to know JavaScript + CSS + HTML + SVG?
+
+						Yes. D3 relies heavily on these technologies.
+					</textarea>
+					<aside class="notes">
+					</aside>
+				</section>
+
+<section>
+<p> For instance, defining a bar chart</p>
+
+<div class="multi-col">
+
+<div class="col">
+<h3>Chart.js</h3>
+<pre><code class="tight">
+var barChart = new Chart(popCanvas, {
+  type: 'bar',
+  data: {
+    labels: ["China", "India", "United States", "Indonesia", "Brazil", "Pakistan", "Nigeria", "Bangladesh", "Russia", "Japan"],
+    datasets: [{
+      label: 'Population',
+      data: [1379302771, 1281935911, 326625791, 260580739, 207353391, 204924861, 190632261, 157826578, 142257519, 126451398],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(153, 102, 255, 0.6)',
+        'rgba(255, 159, 64, 0.6)',
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(153, 102, 255, 0.6)'
+      ]
+    }]
+  }
+});
+</code></pre>
+</div>
+
+<div class="col">
+<h3>d3.js</h3>
+<pre><code class="tight">
+let colors = ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)'];
+g.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.letter); })
+      .attr("y", function(d) { return y(d.frequency); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return height - y(d.frequency); })
+      .attr("fill", function(d,i){ return colors[i]});
+
+</code></pre>
+</div>
+</div>
+
+<aside class="notes">
+</aside>
+</section>
+
+				<section data-state="quadtree" data-background="#f3f3f3">
+					<h3>Animated Quadtree</h3>
+					<div>
+					<canvas id="quadtree" width="480" height="480" style="position: absolute"></canvas>
+					<canvas id="points" width="480" height="480"></canvas>
+					</div>
+					<script src="js/d3-quadtree.debug.js"></script>
+					<script src="https://d3js.org/d3-timer.v0.4.min.js"></script>
+					<script src="https://d3js.org/d3-random.v0.2.min.js"></script>
+					<script src="js/quadtree.js"></script>
+				</section>
+
+
+				<section>
+					<object type="image/svg+xml" data="images/d3-lineage.svg" class="logo">
+					</object>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						## D3 Selections
+
+						Allow us to manipulate and bind data to the DOM (document object model).
+
+						```javascript
+							d3.selectAll('p'); // select all existing paragraphs
+							d3.selectAll('.myclass'); // select all elements of class 'myclass'
+							d3.select('#myid'); // select element with id 'myid'
+						```
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						We can manipulate elements in bulk with selections without for loops.
+
+						```javascript
+						// for all existing <p> elements of class highlight,
+						// change font-size and color
+						d3.selectAll('p.highlight')
+						  .style('font-size', 14)
+						  .style('color', "#03a9f4");
+						```
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<!-- https://bl.ocks.org/mbostock/e3f4376d54e02d5d43ae32a7cf0e6aa9 -->
+					<textarea data-template>
+						### Practice
+
+
+						1. Go to https://goo.gl/VuD261
+						2. Ctrl + Shift + I to open Developer Tools on Chrome.
+
+
+						```javascript
+						// select all circles, change their size
+						d3.selectAll('circle').attr('r', 5);
+						// select all circles, change their color
+						d3.selectAll('circle').style('fill', '#FFC107');
+						// select all paths, change their color and thickness
+						d3.selectAll('path')
+						  .style('stroke-width', 3)
+						  .style('stroke', '#00BCD4');
+
+						```
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						### Binding *data* to DOM elements
+
+
+						```javascript
+
+						var mydata = [[10,9.14],[8,8.14],[13,8.74],[9,8.77],[11,9.26],[14,8.1],[6,6.13],[4,3.1],[12,9.13],[7,7.26],[5,4.74]];
+
+						d3.select('body')
+						  .append('svg')       // create svg element inside <body>
+						  .selectAll('circle') // select all circles within the svg
+						  .data(mydata)        // data is always an array
+						  .enter()             // we will see what this is later
+						  .append('circle');   // create a circle for each data element
+						```
+
+						https://goo.gl/7cRPxQ
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						In the previous example we did not map data values to visual attributes.
+
+						We can do so with D3's *dynamic properties*:
+
+						```javascript
+						mySelection.attr('r', function(d,i){
+							// _this_ is the element being treated (e.g., a <circle>)
+							// d is the data element bound to this element
+							// i is the position of this element in the selection
+
+							// do whatever with d and i, and return the desired fill value
+						});
+						```
+						https://goo.gl/EbDiFA
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						So far we've seen how to create a static visualization...
+
+						How about interaction?
+					</textarea>
+				</section>
+
+				<section>
+					<object type="image/svg+xml" data="images/Enter, Exit, Update I.svg">
+					</object>
+				</section>
+
+				<section>
+					<object type="image/svg+xml" data="images/Enter, Exit, Update II.svg">
+					</object>
+				</section>
+
+				<section>
+					<object type="image/svg+xml" data="images/Enter, Exit, Update III.svg">
+					</object>
+				</section>
+
+				<section data-markdown>
+					<!-- https://bl.ocks.org/mbostock/3cba6ac2fac09e5483bf6c1fade733be -->
+					<textarea data-template>
+						## Example: Update, Enter, Exit
+					</textarea>
+				</section>
+
+				<section>
+					<!-- https://goo.gl/xjtMP8 -->
+					<!-- <script async src="//jsfiddle.net/rafa_veras/qj4k7agz/4/embed/js,result/"></script> -->
+					<iframe width="100%" height="300" src="//jsfiddle.net/rafa_veras/qj4k7agz/10/embedded/js/" allowpaymentrequest allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+					<iframe width="100%" height="300" src="//jsfiddle.net/rafa_veras/qj4k7agz/10/embedded/result/" allowpaymentrequest allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						## D3 Scales
+
+						A scale has an *input domain* and an *output range*.
+
+```javascript
+var x = d3.scaleLinear()
+	.domain([10, 130])
+	.range([0, 960]);
+
+	x(20); // 80
+	x(50); // 320
+```
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						### Domain
+
+						The values of a dataset column.
+
+						A domain can be *continuous*, *ordinal*, *categorical*, or *temporal*.
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						### Range
+
+						An interval of visual variable values. For instance:
+
+						* *Position*: [0, 800] (pixels)
+						* *Radius*: [1, 20] (pixels)
+						* *Lightness*: [1, 100]
+						* *Hue*: [0, 360]
+						* *Stroke-width*: [1, 10]
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+					| Scale     | Domain     | Range      |
+					|-----------|------------|------------|
+					| Linear    | continuous | continuous |
+					| Log       | continuous | continuous |
+					| Power     | continuous | continuous |
+					| Time      | temporal   | continuous |
+					| Quantize  | continuous | discrete   |
+					| Quantile  | continuous | discrete   |
+					| Threshold | continuous | discrete   |
+					| Ordinal   | discrete   | discrete   |
+					| Band      | discrete   | continuous |
+					| Point     | discrete   | continuous |
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						## Linear Scale
+
+						```javascript
+						var x = d3.scaleLinear()
+							.domain([10, 130])
+							.range([0, 960]);
+
+							x(20); // 80
+							x(50); // 320
+						```
+					</textarea>
+				</section>
+
+				<section>
+					<h2>Linear Scale</h2>
+					<iframe width="100%" height="300" src="//jsfiddle.net/rafa_veras/zphsvb50/4/embedded/result/" allowpaymentrequest allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+					<!-- <script async src="//jsfiddle.net/rafa_veras/zphsvb50/4/embed/result/"></script> -->
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						## Logarithmic Scale
+
+						```javascript
+						var x = d3.scaleLog()
+							.domain([10, 130])
+							.range([0, 960])
+							.base(10);
+
+							x(20); // 259.42862825022695
+							x(50); // 602.3746205522912
+						```
+					</textarea>
+				</section>
+
+				<section>
+					<h2>Log Scale</h2>
+					<iframe width="100%" height="300" src="//jsfiddle.net/rafa_veras/qL5L9j1t/embedded/result/" allowpaymentrequest allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+					<!-- <script async src="//jsfiddle.net/rafa_veras/zphsvb50/4/embed/result/"></script> -->
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						## Power Scale
+
+						```javascript
+						var x = d3.scalePow()
+								.exponent(2)             // default exponent is 1
+								.domain([10, 130])       // (equivalent to linear)
+								.range([20, 780]);
+
+						x(20); // 33.57
+						x(50); // 128.57
+						```
+					</textarea>
+				</section>
+
+				<section>
+					<h2>Power Scale</h2>
+					<iframe width="100%" height="300" src="//jsfiddle.net/rafa_veras/bd5u5r15/embedded/result/" allowpaymentrequest allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						## Quantize Scale
+
+						```javascript
+						var color = d3.scaleQuantize()
+							.domain([10, 130])
+							.range(["#66C0F5","#6E8BBD","#615B83","#46324C"]);
+
+						color(20); // "#66C0F5"
+						color(50);     // "#6E8BBD"
+						```
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						<iframe width="100%" height="300" src="//jsfiddle.net/rafa_veras/9bahanks/embedded/result/" allowpaymentrequest allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						#### Resources
+
+						[Introducing d3-scale](https://medium.com/@mbostock/introducing-d3-scale-61980c51545f)
+
+						[Scales by Scott Murray](http://chimera.labs.oreilly.com/books/1230000000345/ch07.html)
+
+						[Scales - D3 API Reference](https://github.com/d3/d3-scale)
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						##Activity
+
+						Plot the relation between diamond carat and price, plus any other
+						dimensions you find interesting.
+					</textarea>
+
+				</section>
+
+			</div>
+		</div>
 
 		<script>
 			// More info about config & dependencies:
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
+				slideNumber: true,
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
@@ -45,5 +486,6 @@
 				]
 			});
 		</script>
+
 	</body>
 </html>
