@@ -36,7 +36,7 @@ redraw({node: quadtree._root, x0: x0, y0: y0, x1: x1, y1: y1});
 Reveal.addEventListener('quadtree', function() {
   let nPoints = 0;
   let t = d3_timer.timer(function() {
-    if (nPoints > 5000) t.stop();
+    if (nPoints > 500) t.stop();
 
     var x, y;
 

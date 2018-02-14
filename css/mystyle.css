@@ -1,5 +1,5 @@
 pre code.tight {
-  font-size: 0.6em;
+  font-size: 0.8em;
   line-height: 1.2em;
 }
 
@@ -8,6 +8,10 @@ object text {
 }
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+.reveal {
+  font-size: 36px;
+}
 
 .reveal em {
   color: #42affa;
